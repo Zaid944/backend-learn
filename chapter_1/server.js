@@ -1,5 +1,6 @@
 const http = require("http");
 const fs = require("fs");
+const _ = require("lodash");
 
 const server = http.createServer((req, res) => {
     console.log("request has been made from browser to server");
@@ -7,6 +8,15 @@ const server = http.createServer((req, res) => {
     //   console.log(req.method);
     //   console.log(req.headers);
     //   console.log(req.url);
+
+    //lodash
+    let num = _.random(0, 20);
+    console.log(num);
+    let greet = _.once(() => {
+        console.log("hello");
+    });
+    greet();
+    greet();
 
     //   res.setHeader("Content-Type", "application/json");
     //   res.write("hello sending response");
@@ -31,6 +41,11 @@ const server = http.createServer((req, res) => {
         case "/about":
             path += "/about.html";
             break;
+        case "/aboutMe":
+            res.statusCode = 301;
+            res.setHeader("Location", "/about");
+            res.end();
+            break;
         default:
             path += "/bad.html";
     }
@@ -39,6 +54,9 @@ const server = http.createServer((req, res) => {
         if (err) {
             console.log("bad file");
         } else {
+            if (path == "./views/bad.html") {
+                res.statusCode = 404;
+            }
             res.write(fileData);
             res.end();
         }
