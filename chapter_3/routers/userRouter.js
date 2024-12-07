@@ -1,90 +1,38 @@
 import express from "express";
-import userModel from "../models/userModel.js";
 import protectRoute from "./authHelper.js";
+import {
+    getUser,
+    updateUser,
+    deleteUser,
+    getAllUsers,
+} from "../controller/userController.js";
 const userRouter = express.Router();
 
-userRouter
-    .route("/")
-    .get(protectRoute, getUser)
-    .post(postUser)
-    .patch(updateUser)
-    .delete(deleteUser);
+// userRouter
+//     .route("/")
+//     .get(protectRoute, getUser)
+//     .post(postUser)
+//     .patch(updateUser)
+//     .delete(deleteUser);
 
-userRouter.route("/getCookie").get(getCookies);
-userRouter.route("/setCookie").get(setCookies);
+// userRouter.route("/getCookie").get(getCookies);
+// userRouter.route("/setCookie").get(setCookies);
 
-userRouter.route("/:id").get(getUserById);
+// userRouter.route("/:id").get(getUserById);
 
-async function getUser(req, res) {
-    console.log(req.query);
-    let allUsers = await userModel.find();
+//user ke options
+userRouter.route("/:id").patch(updateUser).delete(deleteUser);
 
-    // let allUsers = await userModel.findOne({name: 'Zaid'});
+//profile page
+userRouter.use(protectRoute);
+userRouter.route("/userProfile").get(getUser);
 
-    res.json({
-        message: "list of all users",
-        data: allUsers,
-    });
-    // res.send(users);
-}
+// userRouter.route("/signup").post(signup);
 
-function postUser(req, res) {
-    console.log("req.body", req.body);
-    console.log("here");
-    let dataToBeUpdated = req.body;
-    for (key in dataToBeUpdated) {
-        users[key] = dataToBeUpdated[key];
-    }
-    res.json({
-        message: "updated successfully",
-    });
-}
+// userRouter.route("/login").post(login);
 
-async function updateUser(req, res) {
-    // console.log("req.body", req.body);
-    // console.log("here");
-    let dataToBeUpdated = req.body;
-    let user = await userModel.findOneAndUpdate(
-        { email: "zaid25akhter@gmail.com" },
-        dataToBeUpdated
-    );
-    // for (key in dataToBeUpdated) {
-    //     users[key] = dataToBeUpdated[key];
-    // }
-    res.json({
-        message: "updated successfully",
-        user,
-    });
-}
-
-async function deleteUser(req, res) {
-    // users = {};
-    let user = await userModel.findOneAndDelete({
-        email: "zaid25akhter@gmail.com",
-    });
-
-    res.json({
-        message: "data deleted successfully",
-        user,
-    });
-}
-
-function getUserById(req, res) {
-    console.log("params is", req.params);
-    res.send(req.params.id);
-}
-
-function setCookies(req, res) {
-    // res.setHeader("Set-Cookie", "isLoggedIn=true");
-    //httpOnly -> can't be accessed from frontend
-    res.cookie("isLoggedIn", false);
-    res.send("cookies has been set");
-}
-
-function getCookies(req, res) {
-    let cookie = req.cookies;
-    console.log(cookie);
-    res.send("cookies recieved");
-}
+//admin specific functions
+// userRouter.use(isAuthorised(["admin"]));
+userRouter.route("").get(getAllUsers);
 
 export default userRouter;
