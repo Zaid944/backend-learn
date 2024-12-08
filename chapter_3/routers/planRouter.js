@@ -6,6 +6,7 @@ import {
     createPlan,
     updatePlan,
     deletePlan,
+    top3Plans,
 } from "../controller/planController.js";
 const planRouter = express.Router();
 
@@ -19,4 +20,5 @@ planRouter.route("/crudPlan").post(createPlan);
 
 planRouter.route("/crudPlan/:id").patch(updatePlan).delete(deletePlan);
 
+planRouter.route("/top3Plan").get(top3Plans);
 export default planRouter;
