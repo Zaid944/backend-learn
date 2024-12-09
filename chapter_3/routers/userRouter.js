@@ -12,6 +12,7 @@ import {
     resetPassword,
     logout,
 } from "../controller/userController.js";
+import multer from "multer";
 const userRouter = express.Router();
 
 // userRouter
@@ -44,5 +45,30 @@ userRouter.route("/userProfile").get(getUser);
 //admin specific functions
 userRouter.use(isAuthorised(["admin"]));
 userRouter.route("").get(getAllUsers);
+
+//multer for file upload
+const multerStorage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, "file where image is there");
+    },
+    filename: function (req, file, cb) {
+        cb(null, `user-${Date.now()}.jpeg`);
+    },
+});
+
+const filter = function (req, file, cb) {
+    if (file.mimetype.startsWith("image")) {
+        cb(null, true);
+    } else {
+        cb(new Error("Not an image"), false);
+    }
+};
+
+const upload = multer({
+    storage: multerStorage,
+    fileFilter: filter,
+});
+
+
 
 export default userRouter;

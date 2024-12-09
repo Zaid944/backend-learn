@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import userRouter from "./routers/userRouter.js";
 import authRouter from "./routers/authRouter.js";
 import planRouter from "./routers/planRouter.js";
+import reviewRouter from "./routers/reviewRouter.js";
 //middleware -> frontend -> json convert
 //json -> javascript objects
 //global middleware
@@ -15,6 +16,7 @@ app.use(cookieParser());
 app.use("/user", userRouter);
 app.use("/auth", authRouter);
 app.use("/plan", planRouter);
+app.use("/reviews", reviewRouter);
 
 //res is not a blocking function
 //so after this also code executes
